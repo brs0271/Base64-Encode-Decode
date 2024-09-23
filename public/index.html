@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base64 Encoder/Decoder</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            width: 300px;
+            text-align: center;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            background-color: #5cb85c;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #4cae4c;
+        }
+
+        p {
+            margin: 10px 0;
+            color: #555;
+        }
+
+        .result {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+            margin-top: 10px;
+        }
+
+        .copy-button {
+            margin-top: 10px;
+            background-color: #007bff;
+        }
+
+        .copy-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Base64 Encoder/Decoder</h1>
+
+    <div class="container">
+        <h2>Encode</h2>
+        <input type="text" id="encodeInput" placeholder="Enter text to encode">
+        <button onclick="encode()">Encode</button>
+        <p class="result" id="encodeResult"></p>
+        <button class="copy-button" id="copyEncode" style="display:none;" onclick="copyToClipboard('encodeResult')">Copy</button>
+    </div>
+
+    <div class="container">
+        <h2>Decode</h2>
+        <input type="text" id="decodeInput" placeholder="Enter Base64 text to decode">
+        <button onclick="decode()">Decode</button>
+        <p class="result" id="decodeResult"></p>
+        <button class="copy-button" id="copyDecode" style="display:none;" onclick="copyToClipboard('decodeResult')">Copy</button>
+    </div>
+
+    <script>
+        async function encode() {
+            const text = document.getElementById('encodeInput').value;
+            const response = await fetch('/encode', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text })
+            });
+            const result = await response.json();
+            const resultElement = document.getElementById('encodeResult');
+            resultElement.innerText = result.encoded;
+            document.getElementById('copyEncode').style.display = 'inline-block';
+        }
+
+        async function decode() {
+            const text = document.getElementById('decodeInput').value;
+            const response = await fetch('/decode', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text })
+            });
+            const result = await response.json();
+            const resultElement = document.getElementById('decodeResult');
+            resultElement.innerText = result.decoded;
+            document.getElementById('copyDecode').style.display = 'inline-block';
+        }
+
+        function copyToClipboard(resultId) {
+            const resultText = document.getElementById(resultId).innerText;
+            navigator.clipboard.writeText(resultText).then(() => {
+                alert("Copied to clipboard!");
+            });
+        }
+    </script>
+</body>
+</html>

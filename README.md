@@ -39,3 +39,6 @@ Go to https://localhost:3000
 Give a ⭐️ if this project helped you!
 
 ***
+
+# Note:
+I'm just playing with chatgpt in this project, so I didn't make this!
